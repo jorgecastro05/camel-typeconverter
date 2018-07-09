@@ -2,21 +2,25 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:camel="http://camel.apache.org/schema/spring"
+       xmlns:ctx="http://www.springframework.org/schema/context"
        xsi:schemaLocation="
+       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
        http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd">
 
-    <!-- Define a traditional camel context here -->
+    <ctx:annotation-config/>
+    <ctx:component-scan base-package="com.fuse"/>
+
     <camelContext id="camel" xmlns="http://camel.apache.org/schema/spring">
-        <route id="simple-route">
+        <route id="routeConverter">
             <from id="route-timer" uri="timer:foo?period=5000"/>
             <log message="Creating Array List"/>
             <transform id="route-transform">
                 <method ref="myTransformer"/>
             </transform>
-            <log message="Converting body using custom converter"/>
+            <log message="Converting body using custom converter ${body.class}"/>
             <convertBodyTo type="java.util.Vector"/>
-            <log message="The converted Object is ${body}"/>
+            <log message="The converted Object is ${body.class} ${body}"/>
         </route>
     </camelContext>
 
